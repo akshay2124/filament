@@ -117,6 +117,10 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
 
     protected bool | Closure | null $isSearchForcedCaseInsensitive = null;
 
+    protected string | Closure | null $editOptionModalWidth = null;
+
+    protected string | Closure | null $createOptionModalWidth = null;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -313,6 +317,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
             ->color('gray')
             ->icon(FilamentIcon::resolve('forms::components.select.actions.create-option') ?? 'heroicon-m-plus')
             ->iconButton()
+            ->modalWidth($this->getCreateOptionModalWidth())
             ->modalHeading($this->getCreateOptionModalHeading() ?? __('filament-forms::components.select.actions.create_option.modal.heading'))
             ->modalSubmitActionLabel(__('filament-forms::components.select.actions.create_option.modal.actions.create.label'))
             ->extraModalFooterActions(fn (Action $action, Select $component): array => $component->isMultiple() ? [
@@ -450,6 +455,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
             ->color('gray')
             ->icon(FilamentIcon::resolve('forms::components.select.actions.edit-option') ?? 'heroicon-m-pencil-square')
             ->iconButton()
+            ->modalWidth($this->getEditOptionModalWidth())
             ->modalHeading($this->getEditOptionModalHeading() ?? __('filament-forms::components.select.actions.edit_option.modal.heading'))
             ->modalSubmitActionLabel(__('filament-forms::components.select.actions.edit_option.modal.actions.save.label'));
 
@@ -1293,5 +1299,29 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
             livewireId: $livewire->getId(),
             statePath: $this->getStatePath(),
         );
+    }
+
+    public function editOptionModalWidth(string | Closure | null $width): static
+    {
+        $this->editOptionModalWidth = $width;
+
+        return $this;
+    }
+
+    public function getEditOptionModalWidth(): ?string
+    {
+        return $this->evaluate(value: $this->editOptionModalWidth) ?? 'sm';
+    }
+
+    public function createOptionModalWidth(string | Closure | null $width): static
+    {
+        $this->createOptionModalWidth = $width;
+
+        return $this;
+    }
+
+    public function getCreateOptionModalWidth(): ?string
+    {
+        return $this->evaluate($this->createOptionModalWidth) ?? 'sm';
     }
 }
